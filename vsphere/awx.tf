@@ -138,7 +138,7 @@ resource "vsphere_virtual_machine" "vm" {
       "sudo ansible-playbook -i inventory install.yml",
       "cd",
       #"curl --silent --show-error --header 'x-connect-key: ${var.jc_x_connect_key}' https://kickstart.jumpcloud.com/Kickstart | sudo bash",
-      "sudo rm -f 2",
+      #"sudo rm -f 2",
       "sudo rm -f /home/ubuntu/shutdown.sh",
     ]
   }
