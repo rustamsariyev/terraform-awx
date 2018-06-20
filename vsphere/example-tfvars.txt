@@ -28,10 +28,10 @@ vm_domain = "example.internal"
 
 vm_time_zone = "America/New_York"
 
-docker_version = "18.03.0"
+docker_version = "18.03.1"
 
 docker_edition = "ce"
 
-compose_version = "1.21.0"
+compose_version = "1.21.2"
 
-jc_x_connect_key = "abcd000000000000000000000000000000000000"
+ssh_user = "ubuntu"

@@ -16,10 +16,10 @@ variable "vm_time_zone" {}
 variable "docker_version" {}
 variable "docker_edition" {}
 variable "compose_version" {}
-variable "jc_x_connect_key" {}
+variable "ssh_user" {}
 
 provider "vsphere" {
-  version        = "~> 1.3"
+  version        = "~> 1.6"
   user           = "${var.vsphere_user}"
   password       = "${var.vsphere_password}"
   vsphere_server = "${var.vsphere_server}"
@@ -103,8 +103,6 @@ resource "vsphere_virtual_machine" "vm" {
   provisioner "remote-exec" {
     inline = [
       "sudo hostnamectl set-hostname ${var.vm_name}.${var.vm_domain}",
-      #"sudo sed -i '2i 127.0.0.1       ${var.vm_name}.${var.vm_domain}' /etc/hosts",
-      #"sudo sed -i '3d' /etc/hosts",
       "sudo apt-get update",
       "sudo apt-get upgrade -y",
       "sudo apt-get autoremove -y",
@@ -134,18 +132,14 @@ resource "vsphere_virtual_machine" "vm" {
       "pip install --user docker",
       "git clone https://github.com/ansible/awx.git",
       "cd awx/installer",
-      "sudo ansible-playbook -i inventory install.yml",
-      "cd",
-      #"curl --silent --show-error --header 'x-connect-key: ${var.jc_x_connect_key}' https://kickstart.jumpcloud.com/Kickstart | sudo bash",
-      #"sudo rm -f 2",
-      "sudo rm -f /home/ubuntu/shutdown.sh",
+      "sudo ansible-playbook -i inventory install.yml"
     ]
   }
 
   connection {
     type        = "ssh"
     private_key = "${file("~/.ssh/id_rsa")}"
-    user        = "ubuntu"
+    user        = "${var.ssh_user}"
     agent       = false
   }
 }
