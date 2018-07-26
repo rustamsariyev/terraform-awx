@@ -132,6 +132,7 @@ resource "vsphere_virtual_machine" "vm" {
       "sudo apt-get install -y ansible",
       "sudo apt-get install -y python-pip",
       "pip install --user docker",
+      "pip install --upgrade ansible-tower-cli",
       "git clone https://github.com/ansible/awx.git",
       "cd awx/installer",
       "sudo ansible-playbook -i inventory install.yml"
