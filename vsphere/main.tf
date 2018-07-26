@@ -13,6 +13,7 @@ variable "vm_mac_address" {}
 variable "vm_disk1_size" {}
 variable "vm_domain" {}
 variable "vm_time_zone" {}
+variable "account_id" {}
 variable "docker_version" {}
 variable "docker_edition" {}
 variable "compose_version" {}
@@ -111,8 +112,8 @@ resource "vsphere_virtual_machine" "vm" {
       "UUID=$(sudo blkid -o value -s UUID /dev/sdb)",
       "echo \"UUID=$UUID /var/lib/docker/volumes ext4 defaults 0 0\" | sudo tee -a /etc/fstab",
       "sudo mount -a",
-      "sudo groupadd --gid 120 docker",
-      "sudo adduser --gid 120 --uid 120 --disabled-password -gecos \"docker\" docker",
+      "sudo groupadd --gid ${var.account_id} docker",
+      "sudo adduser --gid ${var.account_id} --uid ${var.account_id} --disabled-password -gecos \"docker\" docker",
       "sudo chmod 0700 /var/lib/docker/volumes",
       "sudo chown -R root:root /var/lib/docker/volumes",
       "sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common",
@@ -120,7 +121,8 @@ resource "vsphere_virtual_machine" "vm" {
       "sudo add-apt-repository 'deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable'",
       "sudo apt-get update",
       "sudo apt-get upgrade -y",
-      "sudo apt-get install -y docker-${var.docker_edition}=${var.docker_version}~${var.docker_edition}-0~ubuntu",
+      #"sudo apt-get install -y docker-${var.docker_edition}=${var.docker_version}~${var.docker_edition}-0~ubuntu-xenial",
+      "sudo apt-get install -y docker-${var.docker_edition}=${var.docker_version}~${var.docker_edition}~3-0~ubuntu",
       "sudo systemctl enable docker",
       "sudo usermod -aG docker ubuntu",
       "sudo curl -L https://github.com/docker/compose/releases/download/${var.compose_version}/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose",

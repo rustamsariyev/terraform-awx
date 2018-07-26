@@ -16,19 +16,21 @@ vm_template = "templates/ubuntu16"
 
 vm_name = "awx"
 
-vm_vcpu = "2"
+vm_vcpu = 2
 
-vm_memory = "4096"
+vm_memory = 4096
 
 vm_mac_address = "00:00:00:00:00:00"
 
-vm_disk1_size = "25"
+vm_disk1_size = 25
 
 vm_domain = "example.internal"
 
 vm_time_zone = "America/New_York"
 
-docker_version = "18.03.1"
+account_id = 121
+
+docker_version = "18.06.0"
 
 docker_edition = "ce"
 
