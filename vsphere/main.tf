@@ -20,7 +20,7 @@ variable "compose_version" {}
 variable "ssh_user" {}
 
 provider "vsphere" {
-  version        = "~> 1.6"
+  version        = "~> 1.7"
   user           = "${var.vsphere_user}"
   password       = "${var.vsphere_password}"
   vsphere_server = "${var.vsphere_server}"

@@ -30,10 +30,10 @@ vm_time_zone = "America/New_York"
 
 account_id = 121
 
-docker_version = "18.06.0"
+docker_version = "18.06.1"
 
 docker_edition = "ce"
 
-compose_version = "1.21.2"
+compose_version = "1.22.0"
 
 ssh_user = "ubuntu"
