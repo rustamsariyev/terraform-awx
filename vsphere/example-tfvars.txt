@@ -12,7 +12,7 @@ vsphere_resource_pool = "Resources"
 
 vsphere_network = "vlan0"
 
-vm_template = "templates/ubuntu16"
+vm_template = "templates/ubuntu18"
 
 vm_name = "awx"
 
@@ -30,10 +30,10 @@ vm_time_zone = "America/New_York"
 
 account_id = 121
 
-docker_version = "18.06.1"
+docker_version = "18.09.7"
 
 docker_edition = "ce"
 
-compose_version = "1.22.0"
+compose_version = "1.24.0"
 
-ssh_user = "ubuntu"
+ssh_user = "ansible"

@@ -19,8 +19,12 @@ variable "docker_edition" {}
 variable "compose_version" {}
 variable "ssh_user" {}
 
+terraform {
+  required_version = ">= 0.12"
+}
+
 provider "vsphere" {
-  version        = "~> 1.7"
+  version        = "~> 1.12"
   user           = "${var.vsphere_user}"
   password       = "${var.vsphere_password}"
   vsphere_server = "${var.vsphere_server}"
@@ -118,13 +122,14 @@ resource "vsphere_virtual_machine" "vm" {
       "sudo chown -R root:root /var/lib/docker/volumes",
       "sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common",
       "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -",
-      "sudo add-apt-repository 'deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable'",
+      "sudo add-apt-repository \"deb [arch=amd64] https://download.docker.com/linux/ubuntu `lsb_release -cs` stable\"",
       "sudo apt-get update",
       "sudo apt-get upgrade -y",
-      #"sudo apt-get install -y docker-${var.docker_edition}=${var.docker_version}~${var.docker_edition}-0~ubuntu-xenial",
-      "sudo apt-get install -y docker-${var.docker_edition}=${var.docker_version}~${var.docker_edition}~3-0~ubuntu",
+      #"sudo apt-get install -y docker-${var.docker_edition}=${var.docker_version}~${var.docker_edition}-0~ubuntu-`lsb_release -cs`",
+      #"sudo apt-get install -y docker-${var.docker_edition}=${var.docker_version}~${var.docker_edition}-0~ubuntu",
+      "sudo apt-get install -y docker-${var.docker_edition}=5:${var.docker_version}~3-0~ubuntu-`lsb_release -cs`",
       "sudo systemctl enable docker",
-      "sudo usermod -aG docker ubuntu",
+      "sudo usermod -aG docker ansible",
       "sudo curl -L https://github.com/docker/compose/releases/download/${var.compose_version}/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose",
       "sudo chmod +x /usr/local/bin/docker-compose",
       "sudo apt-add-repository -y ppa:ansible/ansible",
@@ -132,6 +137,7 @@ resource "vsphere_virtual_machine" "vm" {
       "sudo apt-get install -y ansible",
       "sudo apt-get install -y python-pip",
       "pip install --user docker",
+      "pip install --user docker-compose",      
       "pip install --upgrade ansible-tower-cli",
       "git clone https://github.com/ansible/awx.git",
       "cd awx/installer",
@@ -141,8 +147,17 @@ resource "vsphere_virtual_machine" "vm" {
 
   connection {
     type        = "ssh"
+    host        = "${self.default_ip_address}"
     private_key = "${file("~/.ssh/id_rsa")}"
     user        = "${var.ssh_user}"
     agent       = false
   }
+
+  # provisioner "local-exec" {
+  #   command = "ansible-galaxy --force install -r ../ansible/requirements.yml"
+  # }
+  #
+  # provisioner "local-exec" {
+  #   command = "ansible-playbook --ssh-extra-args='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null' -u ${var.ssh_user} --private-key ~/.ssh/id_rsa -i ../ansible/inventory ../ansible/playbook.yml"
+  # }
 }
